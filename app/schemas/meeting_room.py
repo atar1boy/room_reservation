@@ -1,15 +1,19 @@
 from typing import Optional
 
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, Field
 
 
-class MeetingRoomCreate(BaseModel):
-    name: str
+class MeetingRoomBase(BaseModel):
+    name: Optional[str] = Field(None, min_length=1, max_length=100)
     description: Optional[str]
 
-    @validator('name')
-    def name_cant_be_empty_and_longer_then_100_characters(cls, value: str):
-        if len(value) == 0 or len(value) > 100:
-            raise ValueError(
-                'Строка не должна быть пустой или превышать 100 символов.')
-        return value
+
+class MeetingRoomCreate(MeetingRoomBase):
+    name: str = Field(..., min_length=1, max_length=100)
+
+
+class MeetingRoomDB(MeetingRoomCreate):
+    id: int
+
+    class Config:
+        orm_mode = True
