@@ -17,3 +17,5 @@ class MeetingRoomDB(MeetingRoomCreate):
 
     class Config:
         orm_mode = True
+
+
